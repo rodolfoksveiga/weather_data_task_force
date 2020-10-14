@@ -100,4 +100,4 @@ BindData = function(level, input_dir) {
 }
 
 # application ####
-BindData('hour', './data/')
+lapply(c('day', 'hour'), BindData, './data/')
