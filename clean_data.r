@@ -94,7 +94,8 @@ BindData = function(level, input_dir) {
     vars = c('po', 'press', 'temp', 'ue', 'ur')
     data = lapply(vars, CleanHour, input_dir)
   }
-  data = Reduce(function(x, y) merge(x, y, all = TRUE), data)
+  data = Reduce(function(x, y) merge(x, y, all = TRUE), data) %>%
+    arrange(year, month, day, hour)
   write.csv(data, paste0(input_dir, 'data_', level, '.csv'), row.names = FALSE)
 }
 
