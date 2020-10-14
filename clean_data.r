@@ -66,17 +66,23 @@ SplitHour = function(month, file_path, var) {
   return(df)
 }
 ExtractHour = function(file_path, var) {
+  year = file_path %>%
+    str_extract('(?<=_).*?(?=\\.xls)') %>%
+    as.numeric()
   df = 1:12 %>%
     lapply(SplitHour, file_path, var) %>%
-    bind_rows()
+    bind_rows() %>%
+    mutate(year = year) %>%
+    select(c('year', 'month', 'day', 'hour', everything()))
   return(df)
 }
 CleanHour = function(var, input_dir) {
   pattern = paste0('^', var, '_')
-  df2 = input_dir %>%
+  df = input_dir %>%
     dir(pattern, full.names = TRUE) %>%
     lapply(ExtractHour, var) %>%
     bind_rows()
+  return(df)
 }
 # bind data
 BindData = function(level, input_dir) {
@@ -93,4 +99,4 @@ BindData = function(level, input_dir) {
 }
 
 # application ####
-lapply(c('day', 'hour'), BindData, './data/')
+BindData('hour', './data/')
